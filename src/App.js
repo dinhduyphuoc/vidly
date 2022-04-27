@@ -1,50 +1,32 @@
 import React, { Component } from "react";
-import Movies from "./components/movies";
-import Pagination from "./commons/pagination";
-import { getGenres } from "./services/fakeGenreService";
-import { getMovies } from "./services/fakeMovieService";
+import { Route, Switch, Redirect } from "react-router-dom";
+import Main from "./Main";
+import NavBar from "./components/commons/navBar";
+import MovieForm from "./components/movieForm";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import LoginForm from "./components/commons/loginForm";
+import "./App.css";
 
 class App extends Component {
-  state = {
-    movies: [],
-    genres: [],
-    pageSize: 4,
-  };
-
-  componentDidMount() {
-    this.setState({ movies: getMovies(), genres: getGenres() });
-  }
-
-  handleDelete = (movie) => {
-    const movies = this.state.movies.filter((m) => m._id !== movie._id);
-    this.setState({ movies });
-  };
-
-  handleLike = (movie) => {
-    const movies = [...this.state.movies];
-    const index = movies.indexOf(movie);
-    movies[index] = { ...movies[index] };
-    movies[index].liked = !movies[index].liked;
-    this.setState({ movies });
-  };
-
-  handlePageChange = () => {};
-
+  state = {};
   render() {
-    const { length: count } = this.state.movies;
-
     return (
       <React.Fragment>
-        <Movies
-          data={this.state}
-          onDelete={this.handleDelete}
-          onLike={this.handleLike}
-        />
-        <Pagination
-          itemsCount={count}
-          pageSize={this.state.pageSize}
-          onPageChange={this.handlePageChange}
-        />
+        <NavBar />
+        <main className="container">
+          <Switch>
+            <Route path="/login" component={LoginForm} />
+            <Route path="/movies/:id" component={MovieForm} />
+            <Route path="/movies" component={Main} />
+            <Route path="/customers" component={Customers} />
+            <Route path="/rentals" component={Rentals} />
+            <Route path="/not-found" component={NotFound} />
+            <Route exact path="/" component={Main} />
+            <Redirect to="/not-found" />
+          </Switch>
+        </main>
       </React.Fragment>
     );
   }
