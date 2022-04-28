@@ -28,7 +28,7 @@ class MovieForm extends Form {
   };
 
   doSubmit = () => {
-    console.log("Hello MovieForm");
+    console.log(this.state);
   };
 
   render() {
