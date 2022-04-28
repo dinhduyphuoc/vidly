@@ -5,8 +5,7 @@ import Movies from "./components/movies";
 import Pagination from "./components/commons/pagination";
 import ListGroup from "./components/commons/listgroups";
 import { getGenres } from "./services/fakeGenreService";
-import { getMovies } from "./services/fakeMovieService";
-import { Route, Redirect, Switch } from "react-router-dom";
+import { getMovies, saveMovie } from "./services/fakeMovieService";
 class Main extends Component {
   state = {
     movies: [],
