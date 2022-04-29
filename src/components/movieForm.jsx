@@ -1,34 +1,61 @@
 import Form from "./commons/form";
 import Joi from "joi-browser";
 import { getGenres } from "../services/fakeGenreService";
+import { getMovies, getMovie, saveMovie } from "./../services/fakeMovieService";
 
 class MovieForm extends Form {
   state = {
-    data: { title: "", genreId: "", numberInStock: "", rate: "" },
+    data: {
+      _id: "",
+      title: "",
+      genreId: "",
+      numberInStock: "",
+      dailyRentalRate: "",
+    },
     genres: [],
     errors: {},
   };
 
   componentDidMount() {
     const genres = getGenres();
-
     this.setState({ genres });
+
+    const { path } = this.props.match;
+    if (path.includes("new")) return;
+
+    const movieId = this.props.match.params.id;
+
+    const movie = getMovie(movieId);
+    if (!movie) return this.props.history.replace("/not-found");
+    this.setState({ data: this.mapToDisplaySchema(movie) });
   }
 
   schema = {
-    _id: Joi.string(),
+    _id: Joi.string().allow(null, ""),
     title: Joi.string().max(100).required().label("Title"),
     genreId: Joi.string().max(100).required().label("Genre"),
     numberInStock: Joi.number()
+      .required()
       .min(0)
       .max(100)
-      .required()
-      .label("numberInStock"),
-    rate: Joi.number().min(0).max(5).required().label("Rate"),
+      .label("Number In Stock"),
+    dailyRentalRate: Joi.number().min(0).max(5).required().label("Rate"),
+  };
+
+  mapToDisplaySchema = (movie) => {
+    return {
+      _id: movie._id,
+      title: movie.title,
+      genreId: movie.genre._id,
+      numberInStock: movie.numberInStock,
+      dailyRentalRate: movie.dailyRentalRate,
+    };
   };
 
   doSubmit = () => {
-    console.log(this.state);
+    const check = saveMovie(this.state.data);
+    console.log(check);
+    this.props.history.push("/movies");
   };
 
   render() {
@@ -40,7 +67,7 @@ class MovieForm extends Form {
           {this.renderInput("title", "Title")}
           {this.renderSelect("genreId", "Genre", genres)}
           {this.renderInput("numberInStock", "Number In Stock")}
-          {this.renderInput("rate", "Rate")}
+          {this.renderInput("dailyRentalRate", "Rate")}
           {this.renderButton("Save")}
         </form>
       </div>

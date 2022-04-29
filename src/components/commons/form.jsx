@@ -20,7 +20,6 @@ class Form extends Component {
     const obj = { [name]: value };
     const schema = { [name]: this.schema[name] };
     const { error } = Joi.validate(obj, schema);
-
     return error ? error.details[0].message : null;
   };
 
@@ -76,6 +75,7 @@ class Form extends Component {
     return (
       <Select
         name={name}
+        value={data[name]}
         label={label}
         options={options}
         onChange={this.handleChange}
