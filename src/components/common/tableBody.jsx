@@ -4,6 +4,7 @@ import _ from "lodash";
 class TableBody extends Component {
   renderCell = (item, column) => {
     if (column.content) return column.content(item);
+
     return _.get(item, column.path);
   };
 
@@ -12,12 +13,13 @@ class TableBody extends Component {
   };
 
   render() {
-    const { items, columns } = this.props;
+    const { data, columns } = this.props;
+
     return (
       <tbody>
-        {items.map((item) => (
+        {data.map(item => (
           <tr key={item._id}>
-            {columns.map((column) => (
+            {columns.map(column => (
               <td key={this.createKey(item, column)}>
                 {this.renderCell(item, column)}
               </td>

@@ -1,7 +1,7 @@
 import React from "react";
 
 const Rentals = () => {
-  return <h2>Rentals</h2>;
+  return <h1>Rentals</h1>;
 };
 
 export default Rentals;
